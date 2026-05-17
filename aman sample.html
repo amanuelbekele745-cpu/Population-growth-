@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" <content="width=device-width, initial-scale=1.0"/>
+  <title>Population Growth</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      animation: slideUp 1s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 32px;
+      color: #ffffff;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #00e5ff;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    input::placeholder {
+      color: #ddd;
+    }
+
+    select option {
+      color: black;
+    }
+
+    input:focus, select:focus {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.02);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      display: none;
+    }
+
+    .success {
+      color: #00ff99;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    hr {
+      margin: 30px 0;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 id="title">Population Growth</h1>
+
+  <label id="languageLabel">Choose Language</label>
+  <select id="language" onchange="changeLanguage()" required>
+    <option value="en">English</option>
+    <option value="am">አማርኛ</option>
+    <option value="fr">Français</option>
+    <option value="es">Español</option>
+    <option value="ar">العربية</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+    <option value="pt">Português</option>
+    <option value="sw">Swahili</option>
+    <option value="zh">中文</option>
+  </select>
+
+  <hr>
+
+  <h2 id="registerText">Register</h2>
+
+  <form id="registerForm">
+
+    <label id="nameLabel">Full Name</label>
+    <input type="text" id="name" placeholder="Enter your full name" required>
+
+    <label id="phoneLabel">Phone Number</label>
+    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+
+    <button type="button" id="sendCodeBtn" onclick="sendVerificationCode()">Send OTP Code</button>
+
+    <div id="otpStatus" style="margin-top:10px; color:#00ffcc; font-size:14px;"></div>
+
+    <label id="codeLabel">Verification Code</label>
+    <input type="text" id="verificationCode" placeholder="Enter verification code" required>
+
+    <label id="ageLabel">Age</label>
+    <input type="number" id="age" placeholder="Enter your age" required>
+
+    <label id="genderLabel">Gender</label>
+    <select id="gender" required>
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <button type="submit" id="registerBtn">Register Now</button>
+
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <div class="footer">
+    Professional Population Registration Website
+  </div>
+
+</div>
+
+<script>
+
+  const translations = {
+    en: {
+      title: 'Population Growth',
+      choose: 'Choose Language',
+      register: 'Register',
+      fullname: 'Full Name',
+      phone: 'Phone Number',
+      age: 'Age',
+      gender: 'Gender',
+      button: 'Register Now'
+    },
+
+    am: {
+      title: 'የሕዝብ ብዛት እድገት',
+      choose: 'ቋንቋ ይምረጡ',
+      register: 'ይመዝገቡ',
+      fullname: 'ሙሉ ስም',
+      phone: 'ስልክ ቁጥር',
+      age: 'ዕድሜ',
+      gender: 'ጾታ',
+      button: 'አሁን ይመዝገቡ'
+    },
+
+    fr: {
+      title: 'Croissance de la Population',
+      choose: 'Choisir la Langue',
+      register: 'Inscription',
+      fullname: 'Nom Complet',
+      phone: 'Téléphone',
+      age: 'Âge',
+      gender: 'Genre',
+      button: 'S’inscrire'
+    }
+  };
+
+  function changeLanguage() {
+    const lang = document.getElementById('language').value;
+    const t = translations[lang] || translations.en;
+
+    document.getElementById('title').innerText = t.title;
+    document.getElementById('languageLabel').innerText = t.choose;
+    document.getElementById('registerText').innerText = t.register;
+    document.getElementById('nameLabel').innerText = t.fullname;
+    document.getElementById('phoneLabel').innerText = t.phone;
+    document.getElementById('ageLabel').innerText = t.age;
+    document.getElementById('genderLabel').innerText = t.gender;
+    document.getElementById('registerBtn').innerText = t.button;
+  }
+
+  let generatedCode = '';
+
+  async function sendVerificationCode() {
+    const phone = document.getElementById('phone').value;
+
+    if(phone === '') {
+      alert('Please enter phone number first');
+      return;
+    }
+
+    generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    document.getElementById('otpStatus').innerHTML = 'OTP code is being sent...';
+
+    // Example SMS API Request
+    // Replace YOUR_API_KEY and YOUR_PHONE_NUMBER with real values
+
+    try {
+      await fetch('https://api.twilio.com/send-sms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: phone,
+          message: 'Your verification code is: ' + generatedCode
+        })
+      });
+
+      document.getElementById('otpStatus').innerHTML = '✔ OTP code sent successfully to ' + phone;
+
+      let seconds = 60;
+      const btn = document.getElementById('sendCodeBtn');
+      btn.disabled = true;
+
+      const timer = setInterval(() => {
+        btn.innerText = 'Resend OTP (' + seconds + 's)';
+        seconds--;
+
+        if(seconds < 0) {
+          clearInterval(timer);
+          btn.disabled = false;
+          btn.innerText = 'Send OTP Code';
+        }
+      }, 1000);
+
+    } catch(error) {
+      document.getElementById('otpStatus').innerHTML = 'Demo OTP Code: ' + generatedCode;
+    }
+  }
+
+  const form = document.getElementById('registerForm');
+  const result = document.getElementById('result');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const age = document.getElementById('age').value;
+    const gender = document.getElementById('gender').value;
+    const enteredCode = document.getElementById('verificationCode').value;
+
+    if(enteredCode !== generatedCode || generatedCode === '') {
+      alert('Invalid OTP verification code');
+      return;
+    }
+
+    result.style.display = 'block';
+
+    result.innerHTML = `
+      <div class="success">✔ OTP Verification Successful & Registration Completed</div>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Age:</strong> ${age}</p>
+      <p><strong>Gender:</strong> ${gender}</p>
+      <p><strong>Phone Verified:</strong> Yes ✔</p>
+    `;
+
+    form.reset();
+  });
+
+</script>
+
+</body>
+</html>
